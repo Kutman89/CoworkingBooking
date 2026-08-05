@@ -12,8 +12,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// регистрация сервисов и репозиториев
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(

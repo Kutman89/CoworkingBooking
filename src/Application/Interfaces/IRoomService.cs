@@ -4,6 +4,10 @@ namespace Application.Interfaces
 {
     public interface IRoomService
     {
-        Task CreateAsync(CreateRoomRequest request);
+        Task<IEnumerable<Room>> ListAsync();
+        Task<Room?> GetRoomByIdAsync(Guid id);
+        Task CreateRoomAsync(CreateRoomRequest request);
+        Task UpdateRoomAsync(Guid id, CreateRoomRequest request);
+        Task DeleteRoomAsync(Guid id);
     }
 }
