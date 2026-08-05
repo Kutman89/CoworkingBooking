@@ -5,84 +5,88 @@ using Application.DTOs.Room;
 using Application.Interfaces;
 using Domain.Entities;
 
-namespace Application.Services
+namespace Application.Services;
+
+public class RoomService : IRoomService
 {
-    public class RoomService : IRoomService
+    private readonly IRoomRepository _repository;
+
+    public RoomService(IRoomRepository repository)
     {
-        private readonly IRoomRepository _repository;
-
-        public RoomService(IRoomRepository repository)
-        {
-            _repository = repository;
-        }
-
-        // создать комнату
-        public async Task CreateRoomAsync(CreateRoomRequest request)
-        {
-            var room = new Room
-            {
-                Name = request.Name,
-                Description = request.Description,
-                Capacity = request.Capacity,
-                Floor = request.Floor,
-                Type = request.Type,
-                IsActive = true
-            };
-            await _repository.AddAsync(room);
-            await _repository.SaveChangesAsync();
-        }
-
-        // получить все комнаты
-        public async Task<IEnumerable<Room>> ListAsync()
-        {
-            return await _repository.GetAllAsync();
-        }
-
-        // получить по айди
-        public async Task<Room?> GetRoomByIdAsync(Guid id)
-        {
-            var room = await _repository.GetByIdAsync(id);
-            if(room == null)
-            {
-                throw new KeyNotFoundException($"Room with id {id} not found");
-            }
-            return room;
-        }
-
-        // обновить комнату
-        public async Task UpdateRoomAsync(Guid id, CreateRoomRequest request)
-        {
-            var room = await _repository.GetByIdAsync(id);
-            if(room == null)
-            {
-                throw new KeyNotFoundException($"Room with id {id} not found");
-            }
-
-            room.Name = request.Name;
-            room.Description = request.Description;
-            room.Capacity = request.Capacity;
-            room.Floor = request.Floor;
-            room.Type = request.Type;
-
-            await _repository.UpdateAsync(room);
-            await _repository.SaveChangesAsync();
-        }
-
-        // удалить комнату
-        public async Task DeleteRoomAsync(Guid id)
-        {
-            var room = await _repository.GetByIdAsync(id);
-
-            if (room == null)
-            {
-                throw new KeyNotFoundException($"Room with id {id} not found");
-            }
-
-            room.IsActive = false;
-
-            await _repository.UpdateAsync(room);
-            await _repository.SaveChangesAsync();
-        }
-
+        _repository = repository;
     }
+
+    // создать комнату
+    public async Task<Guid> CreateRoomAsync(CreateRoomRequest request, CancellationToken cancellationToken = default)
+    {
+        var room = new Room(
+            request.Name,
+            request.Description,
+            request.Capacity,
+            request.Floor,
+            request.Type
+        );
+        await _repository.AddAsync(room, cancellationToken);
+        await _repository.SaveChangesAsync(cancellationToken);
+
+        return room.Id;
+    }
+
+    // получить все комнаты
+    public async Task<IEnumerable<RoomResponse>> ListAsync(CancellationToken cancellationToken = default)
+    {
+        var rooms = await _repository.GetAllAsync(cancellationToken);
+        return rooms.Select(MapToResponse);
+    }
+
+    // получить по айди
+    public async Task<RoomResponse?> GetRoomByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var room = await _repository.GetByIdAsync(id, cancellationToken);
+        return room == null ? null : MapToResponse(room);
+    }
+
+    // обновить комнату
+    public async Task<bool> UpdateRoomAsync(Guid id, CreateRoomRequest request, CancellationToken cancellationToken = default)
+    {
+        var room = await _repository.GetByIdAsync(id, cancellationToken);
+        if (room == null) return false;
+
+        room.UpdateDetails(
+            request.Name,
+            request.Description,
+            request.Capacity,
+            request.Floor,
+            request.Type
+        );
+
+        _repository.Update(room);
+        await _repository.SaveChangesAsync(cancellationToken);
+
+        return true;
+    }
+
+    // удалить комнату
+    public async Task<bool> DeleteRoomAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var room = await _repository.GetByIdAsync(id, cancellationToken);
+        if(room == null) return false;
+
+        room.Deactivate();
+
+        _repository.Update(room);
+        await _repository.SaveChangesAsync(cancellationToken);
+        return true;
+    }
+
+    private static RoomResponse MapToResponse(Room room) =>
+        new(
+            room.Id,
+            room.Name,
+            room.Description,
+            room.Capacity,
+            room.Floor,
+            room.Type,
+            room.IsActive
+        );
 }

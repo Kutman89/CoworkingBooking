@@ -14,24 +14,29 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Room>> GetAllAsync()
+        public async Task<IEnumerable<Room>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.Rooms.Where(r => r.IsActive).ToListAsync();
+            return await _context.Rooms
+                .AsNoTracking()
+                .Where(r => r.IsActive)
+                .ToListAsync(cancellationToken);
         }
-        public async Task<Room?> GetByIdAsync(Guid id)
+        public async Task<Room?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Rooms.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.Rooms
+                .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
         }
-        public async Task AddAsync(Room room)
+        public async Task AddAsync(Room room, CancellationToken cancellationToken = default)
         {
-            await _context.Rooms.AddAsync(room);
+            await _context.Rooms
+                .AddAsync(room, cancellationToken);
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
-        public async Task UpdateAsync(Room room)
+        public async Task Update(Room room)
         {
             _context.Rooms.Update(room);
         }

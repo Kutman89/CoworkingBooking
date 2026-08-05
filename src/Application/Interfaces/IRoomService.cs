@@ -1,13 +1,13 @@
 ﻿using Application.DTOs.Room;
-using Domain.Entities;
+
 namespace Application.Interfaces
 {
     public interface IRoomService
     {
-        Task<IEnumerable<Room>> ListAsync();
-        Task<Room?> GetRoomByIdAsync(Guid id);
-        Task CreateRoomAsync(CreateRoomRequest request);
-        Task UpdateRoomAsync(Guid id, CreateRoomRequest request);
-        Task DeleteRoomAsync(Guid id);
+        Task<IEnumerable<RoomResponse>> ListAsync(CancellationToken cancellationToken = default);
+        Task<RoomResponse?> GetRoomByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<Guid> CreateRoomAsync(CreateRoomRequest request, CancellationToken cancellationToken = default);
+        Task<bool> UpdateRoomAsync(Guid id, CreateRoomRequest request, CancellationToken cancellationToken = default);
+        Task<bool> DeleteRoomAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
