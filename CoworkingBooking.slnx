@@ -1,6 +1,8 @@
 <Solution>
-  <Project Path="src/Application/Application.csproj" Id="9200b867-6eb8-46e9-a05a-80bf232cb8a0" />
-  <Project Path="src/Domain/Domain.csproj" />
-  <Project Path="src/Infrastructure/Infrastructure.csproj" Id="e87ef06a-e47a-4e7b-8d91-4b951b415ed1" />
-  <Project Path="src/Web/Web.csproj" Id="a9341761-0544-49e9-a382-e03ffcc32ca5" />
+  <Folder Name="/src/">
+    <Project Path="src/Application/Application.csproj" Id="9200b867-6eb8-46e9-a05a-80bf232cb8a0" />
+    <Project Path="src/Domain/Domain.csproj" />
+    <Project Path="src/Infrastructure/Infrastructure.csproj" Id="e87ef06a-e47a-4e7b-8d91-4b951b415ed1" />
+    <Project Path="src/Web/Web.csproj" Id="a9341761-0544-49e9-a382-e03ffcc32ca5" />
+  </Folder>
 </Solution>
