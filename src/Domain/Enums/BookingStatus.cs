@@ -2,9 +2,9 @@
 {
     public enum BookingStatus
     {
-        Pending, // В ожидании
-        Confirmed, // Подтверждено
-        Cancelled, // Отменено
-        Completed // Завершено
+        Pending,    // В ожидании
+        Confirmed,  // Подтверждено
+        Cancelled,  // Отменено
+        Completed   // Завершено
     }
 }

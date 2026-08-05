@@ -1,5 +1,8 @@
-using Microsoft.EntityFrameworkCore;
+using Application.Interfaces;
+using Application.Services;
 using Infrastructure.Data;
+using Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(
