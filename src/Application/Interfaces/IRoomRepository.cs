@@ -1,13 +1,12 @@
 ﻿using Domain.Entities;
 
-namespace Application.Interfaces
+namespace Application.Interfaces;
+
+public interface IRoomRepository
 {
-    public interface IRoomRepository
-    {
-        Task<IEnumerable<Room>> GetAllAsync(CancellationToken cancellationToken = default);
-        Task<Room?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task AddAsync(Room room, CancellationToken cancellationToken = default);
-        Task Update(Room room);
-        Task SaveChangesAsync(CancellationToken cancellationToken = default);
-    }
+    Task<IReadOnlyList<Room>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<Room?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task AddAsync(Room room, CancellationToken cancellationToken = default);
+    void Update(Room room);
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

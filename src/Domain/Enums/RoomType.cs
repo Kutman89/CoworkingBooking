@@ -1,9 +1,8 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Enums;
+
+public enum RoomType
 {
-    public enum RoomType
-    {
-        MeetingRoom = 1,
-        ConferenceRoom = 2,
-        PrivateOffice = 3
-    }
+    MeetingRoom = 1,
+    ConferenceRoom = 2,
+    PrivateOffice = 3
 }

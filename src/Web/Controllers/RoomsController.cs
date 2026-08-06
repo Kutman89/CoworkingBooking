@@ -1,45 +1,48 @@
 ﻿using Application.DTOs.Room;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Application.Services;
 
 namespace Web.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
-public class RoomsController : ControllerBase
+[Route("api/rooms")]
+public class RoomsController(IRoomService roomService) : ControllerBase
 {
-    private readonly IRoomService _roomService;
-    public RoomsController(IRoomService roomService)
-    {
-        _roomService = roomService;
-    }
-
     // POST: api/Room 
     [HttpPost]
-    public async Task<IActionResult> CreateRoom(
+    [ProducesResponseType<RoomResponse>(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<RoomResponse>> Create(
         [FromBody] CreateRoomRequest request,
         CancellationToken cancellationToken)
     {
-        var id = await _roomService.CreateRoomAsync(request, cancellationToken);
-        return CreatedAtAction(nameof(GetRoom), new { id }, null);
+        var room = await roomService.CreateAsync(request, cancellationToken);
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = room.Id}, room);
     }
 
 
     // Список всех комнат
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<RoomResponse>>> GetRooms(CancellationToken cancellationToken)
+    [ProducesResponseType<IReadOnlyList<RoomResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAll(
+        CancellationToken cancellationToken)
     {
-        var rooms = await _roomService.ListAsync(cancellationToken);
+        var rooms = await roomService.ListAsync(cancellationToken);
         return Ok(rooms);
     }
 
 
     // комната по айди
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<RoomResponse>> GetRoom(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType<RoomResponse>(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<RoomResponse>> GetById(
+        Guid id,
+        CancellationToken cancellationToken)
     {
-        var room = await _roomService.GetRoomByIdAsync(id, cancellationToken);
+        var room = await roomService.GetByIdAsync(id, cancellationToken);
         if (room == null) return NotFound();
 
         return Ok(room);            
@@ -47,22 +50,28 @@ public class RoomsController : ControllerBase
 
     // изменение комнаты по айди
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateRoom(Guid id, [FromBody] CreateRoomRequest request, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        Guid id,
+        [FromBody] CreateRoomRequest request,
+        CancellationToken cancellationToken)
     {
-        var updated = await _roomService.UpdateRoomAsync(id, request, cancellationToken);
-        if(!updated) return NotFound();
-
-        return NoContent();        
+        var updated = await roomService.UpdateAsync(id, request, cancellationToken);
+        
+        return updated ? NoContent() : NotFound();
     }
 
     // удаление комнаты по айди
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteRoom(Guid id, CancellationToken cancellationToken)
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        Guid id,
+        CancellationToken cancellationToken)
     {
-            
-        var deleted = await _roomService.DeleteRoomAsync(id, cancellationToken);
-        if(!deleted) return NotFound();
-
-        return NoContent();            
+        var deleted = await roomService.DeleteAsync(id, cancellationToken);
+        return deleted ? NoContent() : NotFound();
     }
 }

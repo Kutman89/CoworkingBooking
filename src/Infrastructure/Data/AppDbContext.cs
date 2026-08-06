@@ -1,12 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Domain.Entities;
-namespace Infrastructure.Data
+﻿using Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
+namespace Infrastructure.Data;
+
+public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-    public class AppDbContext : DbContext
-    {
-        public DbSet<Room> Rooms { get; set; }
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
-    }
+    public DbSet<Room> Rooms { get; set; }
 }

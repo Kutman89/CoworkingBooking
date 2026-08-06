@@ -3,42 +3,42 @@ using Application.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Repository
+namespace Infrastructure.Repository;
+
+public class RoomRepository(AppDbContext context): IRoomRepository
 {
-    public class RoomRepository : IRoomRepository
+    public async Task<IReadOnlyList<Room>> GetAllAsync(
+        CancellationToken cancellationToken = default)
     {
-        private readonly AppDbContext _context;
+        return await context.Rooms
+            .AsNoTracking()
+            .Where(r => r.IsActive)
+            .OrderBy(r => r.Name)
+            .ToListAsync(cancellationToken);
+    }
+    public async Task<Room?> GetByIdAsync(
+        Guid id,
+        CancellationToken cancellationToken = default)
+    {
+        return await context.Rooms
+            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+    }
+    public async Task AddAsync(
+        Room room,
+        CancellationToken cancellationToken = default)
+    {
+        await context.Rooms
+            .AddAsync(room, cancellationToken);
+    }
 
-        public RoomRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+    public void Update(Room room)
+    {
+        context.Rooms.Update(room);
+    }
 
-        public async Task<IEnumerable<Room>> GetAllAsync(CancellationToken cancellationToken = default)
-        {
-            return await _context.Rooms
-                .AsNoTracking()
-                .Where(r => r.IsActive)
-                .ToListAsync(cancellationToken);
-        }
-        public async Task<Room?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            return await _context.Rooms
-                .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
-        }
-        public async Task AddAsync(Room room, CancellationToken cancellationToken = default)
-        {
-            await _context.Rooms
-                .AddAsync(room, cancellationToken);
-        }
-
-        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            await _context.SaveChangesAsync(cancellationToken);
-        }
-        public async Task Update(Room room)
-        {
-            _context.Rooms.Update(room);
-        }
+    public Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default)
+    {
+        return context.SaveChangesAsync(cancellationToken);
     }
 }

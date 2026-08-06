@@ -27,11 +27,14 @@ public class Room
     public void UpdateDetails(string name, string description, int capacity, int floor, RoomType type)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Имя комнаты не может быть пустым.", nameof(name));
+            throw new ArgumentException("Имя комнаты не может быть пустым", nameof(name));
 
         if (capacity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Вместимость должна быть больше 0.");
-
+            throw new ArgumentOutOfRangeException(nameof(capacity), "Вместимость должна быть больше 0");
+        
+        if(!Enum.IsDefined(type))
+            throw new ArgumentOutOfRangeException(nameof(type), "Недопустимый тип комнаты");
+        
         Name = name;
         Description = description;
         Capacity = capacity;
@@ -39,15 +42,7 @@ public class Room
         Type = type;
     }
 
+    public void Deactivate() => IsActive = false;
 
-    public void Deactivate()
-    {
-        IsActive = false;
-    }
-
-
-    public void Activate()
-    {
-        IsActive = true;
-    }
+    public void Activate() => IsActive = true;
 }
