@@ -1,11 +1,11 @@
-﻿using Domain.Entities;
-using Application.Interfaces;
+﻿using Application.Interfaces;
+using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repository;
 
-public class RoomRepository(AppDbContext context): IRoomRepository
+public class RoomRepository(AppDbContext context) : IRoomRepository
 {
     public async Task<IReadOnlyList<Room>> GetAllAsync(
         CancellationToken cancellationToken = default)
