@@ -28,7 +28,10 @@ public class Room
     {
         if (string.IsNullOrWhiteSpace(name))
             throw new ArgumentException("Имя комнаты не может быть пустым", nameof(name));
-
+        
+        if (string.IsNullOrWhiteSpace(description))
+            throw new ArgumentException("Описание комнаты не может быть пустым", nameof(description));
+        
         if (capacity <= 0)
             throw new ArgumentOutOfRangeException(nameof(capacity), "Вместимость должна быть больше 0");
         
