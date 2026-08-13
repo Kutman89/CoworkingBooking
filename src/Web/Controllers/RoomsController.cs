@@ -14,9 +14,9 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<RoomResponse>> Create(
         [FromBody] CreateRoomRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var room = await roomService.CreateAsync(request, cancellationToken);
+        var room = await roomService.CreateAsync(request, ct);
         return CreatedAtAction(
             nameof(GetById),
             new { id = room.Id}, room);
@@ -26,10 +26,10 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     // Список всех комнат
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<RoomResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IEnumerable<RoomResponse>>> GetAll(
-        CancellationToken cancellationToken)
+    public async Task<ActionResult<IReadOnlyList<RoomResponse>>> GetAll(
+        CancellationToken ct)
     {
-        var rooms = await roomService.ListAsync(cancellationToken);
+        var rooms = await roomService.ListAsync(ct);
         return Ok(rooms);
     }
 
@@ -40,9 +40,9 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<RoomResponse>> GetById(
         Guid id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var room = await roomService.GetByIdAsync(id, cancellationToken);
+        var room = await roomService.GetByIdAsync(id, ct);
         if (room == null) return NotFound();
 
         return Ok(room);            
@@ -56,9 +56,9 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     public async Task<IActionResult> Update(
         Guid id,
         [FromBody] CreateRoomRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var updated = await roomService.UpdateAsync(id, request, cancellationToken);
+        var updated = await roomService.UpdateAsync(id, request, ct);
         
         return updated ? NoContent() : NotFound();
     }
@@ -69,9 +69,9 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Delete(
         Guid id,
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
-        var deleted = await roomService.DeleteAsync(id, cancellationToken);
+        var deleted = await roomService.DeleteAsync(id, ct);
         return deleted ? NoContent() : NotFound();
     }
 }

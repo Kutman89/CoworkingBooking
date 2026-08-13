@@ -14,8 +14,12 @@ builder.Services.AddSwaggerGen();
 
 
 // регистрация сервисов и репозиториев
+// комнаты
 builder.Services.AddScoped<IRoomService, RoomService>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
+// пользователи
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 
@@ -44,4 +48,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-

@@ -8,27 +8,27 @@ namespace Infrastructure.Repository;
 public class RoomRepository(AppDbContext context) : IRoomRepository
 {
     public async Task<IReadOnlyList<Room>> GetAllAsync(
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
         return await context.Rooms
             .AsNoTracking()
             .Where(r => r.IsActive)
             .OrderBy(r => r.Name)
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
     }
     public async Task<Room?> GetByIdAsync(
         Guid id,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
         return await context.Rooms
-            .FirstOrDefaultAsync(r => r.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(r => r.Id == id, ct);
     }
     public async Task AddAsync(
         Room room,
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
         await context.Rooms
-            .AddAsync(room, cancellationToken);
+            .AddAsync(room, ct);
     }
 
     public void Update(Room room)
@@ -37,8 +37,8 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
     }
 
     public Task<int> SaveChangesAsync(
-        CancellationToken cancellationToken = default)
+        CancellationToken ct = default)
     {
-        return context.SaveChangesAsync(cancellationToken);
+        return context.SaveChangesAsync(ct);
     }
 }
