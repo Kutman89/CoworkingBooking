@@ -1,4 +1,5 @@
 ﻿using Domain.Enums;
+using Domain.Exceptions;
 
 namespace Domain.Entities;
 
@@ -27,16 +28,16 @@ public class Room
     public void UpdateDetails(string name, string description, int capacity, int floor, RoomType type)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentException("Имя комнаты не может быть пустым", nameof(name));
+            throw new DomainExceptions("Имя комнаты не может быть пустым", nameof(name));
         
         if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentException("Описание комнаты не может быть пустым", nameof(description));
+            throw new DomainExceptions("Описание комнаты не может быть пустым", nameof(description));
         
         if (capacity <= 0)
-            throw new ArgumentOutOfRangeException(nameof(capacity), "Вместимость должна быть больше 0");
+            throw new DomainExceptions("Вместимость должна быть больше 0", nameof(capacity));
         
         if(!Enum.IsDefined(type))
-            throw new ArgumentOutOfRangeException(nameof(type), "Недопустимый тип комнаты");
+            throw new DomainExceptions("Недопустимый тип комнаты", nameof(type));
         
         Name = name;
         Description = description;
@@ -45,7 +46,22 @@ public class Room
         Type = type;
     }
 
-    public void Deactivate() => IsActive = false;
+    public void Deactivate(){
+        if (IsActive)
+        {
+            throw new DomainExceptions("Комната уже не активна", nameof(IsActive));
+        }
 
-    public void Activate() => IsActive = true;
+        IsActive = false;
+    }
+
+    public void Activate()
+    {
+        if (!IsActive)
+        {
+            throw new DomainExceptions("Комната уже активна", nameof(IsActive));
+        }
+
+        IsActive = true;
+    }
 }

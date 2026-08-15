@@ -4,21 +4,24 @@ using Application.DTOs.User;
 
 namespace Application.Services;
 
-public sealed class UserService(IUserRepository repository) : IUserService
+public sealed class UserService(IUserRepository repository, IPasswordHasher passwordHasher) : IUserService
 {
     // создать пользователя
     public async Task<UserResponse> CreateAsync(
         CreateUserRequest request,
         CancellationToken ct = default)
     {
+        var passwordHash = passwordHasher.Hash(request.Password);
+
         var user = new User(
             request.FirstName,
             request.LastName,
-            request.Email
+            request.Email,
+            passwordHash
         );
 
         await repository.AddAsync(user, ct);
-        await repository.SaveChangesAsync();
+        await repository.SaveChangesAsync(ct);
 
         return MapToResponse(user);
     }
@@ -57,7 +60,7 @@ public sealed class UserService(IUserRepository repository) : IUserService
         user.Block();
 
         await repository.Update(user);
-        await repository.SaveChangesAsync();
+        await repository.SaveChangesAsync(ct);
 
         return true;
     }

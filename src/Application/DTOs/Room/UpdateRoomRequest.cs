@@ -15,7 +15,7 @@ public sealed class UpdateRoomRequest
     [Range(1, 1000)]
     public int Capacity { get; init; }
 
-    [Range(-10, 200)]
+    [Range(0, 200)]
     public int Floor { get; init; }
 
     [EnumDataType(typeof(RoomType))]

@@ -49,7 +49,7 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
     // обновить комнату
     public async Task<bool> UpdateAsync(
         Guid id,
-        CreateRoomRequest request,
+        UpdateRoomRequest request,
         CancellationToken ct = default)
     {
         var room = await repository.GetByIdAsync(id, ct);

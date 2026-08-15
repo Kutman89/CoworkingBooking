@@ -15,7 +15,7 @@ public sealed class CreateRoomRequest
     [Range(1, 1000)]
     public int Capacity { get; set; }
     
-    [Range(-10, 200)]
+    [Range(0, 200)]
     public int Floor { get; set; }
 
     [EnumDataType(typeof(RoomType))]

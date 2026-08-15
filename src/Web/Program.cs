@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Application.Services;
 using Infrastructure.Data;
 using Infrastructure.Repository;
+using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -20,6 +21,7 @@ builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 // пользователи
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 
 
@@ -44,7 +46,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

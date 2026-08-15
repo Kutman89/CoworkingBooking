@@ -12,7 +12,7 @@ public sealed class UserRepository(AppDbContext context) : IUserRepository
         CancellationToken ct = default)
     {
         await context.Users.
-            AddAsync(user);
+            AddAsync(user, ct);
     }
 
     public async Task<User?> GetByIdAsync(
@@ -28,7 +28,6 @@ public sealed class UserRepository(AppDbContext context) : IUserRepository
     {
         return await context.Users.
             AsNoTracking().
-            Where(u => u.IsBlocked == false).
             OrderBy(u => u.FirstName).
             ToListAsync(ct);
     }

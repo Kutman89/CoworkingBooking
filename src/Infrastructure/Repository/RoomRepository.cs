@@ -21,6 +21,7 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
         CancellationToken ct = default)
     {
         return await context.Rooms
+            .Where(r => r.IsActive)
             .FirstOrDefaultAsync(r => r.Id == id, ct);
     }
     public async Task AddAsync(
@@ -33,7 +34,10 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
 
     public void Update(Room room)
     {
-        context.Rooms.Update(room);
+        if (room.IsActive)
+        {
+            context.Rooms.Update(room);
+        }
     }
 
     public Task<int> SaveChangesAsync(

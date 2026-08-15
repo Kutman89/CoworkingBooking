@@ -55,7 +55,7 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(
         Guid id,
-        [FromBody] CreateRoomRequest request,
+        [FromBody] UpdateRoomRequest request,
         CancellationToken ct)
     {
         var updated = await roomService.UpdateAsync(id, request, ct);
