@@ -23,7 +23,7 @@ public class User
     public void SetPasswordHash(string passwordHash)
     {
         if (string.IsNullOrWhiteSpace(passwordHash))
-            throw new DomainExceptions("Хеш пароля не может быть пустым", nameof(passwordHash));
+            throw new DomainException("Хеш пароля не может быть пустым", nameof(passwordHash));
 
         PasswordHash = passwordHash;
     }
@@ -31,13 +31,13 @@ public class User
     public void UpdateProfile(string firstName, string lastName, string email)
     {
         if (string.IsNullOrWhiteSpace(firstName))
-            throw new DomainExceptions("Имя не может быть пустым", nameof(firstName));
+            throw new DomainException("Имя не может быть пустым", nameof(firstName));
         
         if (string.IsNullOrWhiteSpace(lastName))
-            throw new DomainExceptions("Фамилия не может быть пустой", nameof(lastName));
+            throw new DomainException("Фамилия не может быть пустой", nameof(lastName));
         
         if (string.IsNullOrWhiteSpace(email) || !email.Contains("@"))
-            throw new DomainExceptions("Email не может быть пустым", nameof(email));
+            throw new DomainException("Email не может быть пустым", nameof(email));
         
         FirstName = firstName;
         LastName = lastName;
@@ -47,7 +47,7 @@ public class User
     public void Block(){
         if (IsBlocked)
         {
-            throw new DomainExceptions("Пользователь уже заблокирован", nameof(IsBlocked));
+            throw new DomainException("Пользователь уже заблокирован", nameof(IsBlocked));
         }
 
         IsBlocked = true;
@@ -55,7 +55,7 @@ public class User
     public void Unblock(){
         if (!IsBlocked)
         {
-            throw new DomainExceptions("Пользователь уже разблокирован", nameof(IsBlocked));
+            throw new DomainException("Пользователь уже разблокирован", nameof(IsBlocked));
         }
         IsBlocked = false;
     }

@@ -28,16 +28,16 @@ public class Room
     public void UpdateDetails(string name, string description, int capacity, int floor, RoomType type)
     {
         if (string.IsNullOrWhiteSpace(name))
-            throw new DomainExceptions("Имя комнаты не может быть пустым", nameof(name));
+            throw new DomainException("Имя комнаты не может быть пустым", nameof(name));
         
         if (string.IsNullOrWhiteSpace(description))
-            throw new DomainExceptions("Описание комнаты не может быть пустым", nameof(description));
+            throw new DomainException("Описание комнаты не может быть пустым", nameof(description));
         
         if (capacity <= 0)
-            throw new DomainExceptions("Вместимость должна быть больше 0", nameof(capacity));
+            throw new DomainException("Вместимость должна быть больше 0", nameof(capacity));
         
         if(!Enum.IsDefined(type))
-            throw new DomainExceptions("Недопустимый тип комнаты", nameof(type));
+            throw new DomainException("Недопустимый тип комнаты", nameof(type));
         
         Name = name;
         Description = description;
@@ -49,7 +49,7 @@ public class Room
     public void Deactivate(){
         if (IsActive)
         {
-            throw new DomainExceptions("Комната уже не активна", nameof(IsActive));
+            throw new DomainException("Комната уже не активна", nameof(IsActive));
         }
 
         IsActive = false;
@@ -59,7 +59,7 @@ public class Room
     {
         if (!IsActive)
         {
-            throw new DomainExceptions("Комната уже активна", nameof(IsActive));
+            throw new DomainException("Комната уже активна", nameof(IsActive));
         }
 
         IsActive = true;
