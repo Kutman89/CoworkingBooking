@@ -27,6 +27,9 @@ public class Booking
             throw new DomainException("Недопустимый идентификатор пользователя", nameof(userId));
         }
 
+        if(startTime.Kind != DateTimeKind.Utc || endTime.Kind != DateTimeKind.Utc)
+            throw new DomainException("Время бронирования должно указываться в формате UTC", nameof(startTime));
+
         ValidateTimes(startTime, endTime);
 
 

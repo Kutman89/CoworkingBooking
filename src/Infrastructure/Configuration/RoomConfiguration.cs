@@ -26,6 +26,7 @@ public class RoomConfiguration : IEntityTypeConfiguration<Room>
 
         builder.Property(r => r.Type)
             .HasConversion<string>()
-            .HasMaxLength(50);
+            .HasMaxLength(14)
+            .IsRequired();
     }
 }
