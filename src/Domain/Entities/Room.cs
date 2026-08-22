@@ -47,7 +47,7 @@ public class Room
     }
 
     public void Deactivate(){
-        if (IsActive)
+        if (!IsActive)
         {
             throw new DomainException("Комната уже не активна", nameof(IsActive));
         }
@@ -57,7 +57,7 @@ public class Room
 
     public void Activate()
     {
-        if (!IsActive)
+        if (IsActive)
         {
             throw new DomainException("Комната уже активна", nameof(IsActive));
         }

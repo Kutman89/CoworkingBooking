@@ -36,10 +36,7 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
     public void Update(
         Room room)
     {
-        if (room.IsActive)
-        {
-            context.Rooms.Update(room);
-        }
+        context.Rooms.Update(room);
     }
 
     public Task<int> SaveChangesAsync(

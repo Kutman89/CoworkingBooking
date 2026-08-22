@@ -26,8 +26,8 @@ public sealed class BookingService(IBookingRepository repository) : IBookingServ
         CancellationToken ct = default)
     {
         var booking = Booking.Create(
-            request.UserId,
             request.RoomId,
+            request.UserId,
             request.StartTime,
             request.EndTime);
 

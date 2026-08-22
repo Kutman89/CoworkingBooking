@@ -16,7 +16,4 @@ public sealed class CreateBookingRequest
 
     [Required]
     public DateTime EndTime { get; set; }
-
-    [Required, EnumDataType(typeof(BookingStatus))]
-    public BookingStatus Status { get; set; }
 }

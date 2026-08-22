@@ -47,7 +47,7 @@ public class UsersController(IUserService userService) : ControllerBase
 
 
     // блокировка пользователя
-    [HttpPut("{id:guid/block}")]
+    [HttpPut("{id:guid}/block")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Block(
@@ -60,7 +60,7 @@ public class UsersController(IUserService userService) : ControllerBase
 
 
     // разблокировка пользователя
-    [HttpPut("{id:guid/unblock}")]
+    [HttpPut("{id:guid}/unblock")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Unblock(

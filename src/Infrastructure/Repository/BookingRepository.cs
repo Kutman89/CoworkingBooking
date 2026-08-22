@@ -22,7 +22,7 @@ public class BookingRepository(AppDbContext context) : IBookingRepository
     {
         return await context.Bookings
             .AsNoTracking()
-            .FirstOrDefaultAsync(b => b.Id == id);
+            .FirstOrDefaultAsync(b => b.Id == id, ct);
     }
 
     public async Task AddAsync(

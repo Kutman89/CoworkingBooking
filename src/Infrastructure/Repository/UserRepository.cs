@@ -32,9 +32,8 @@ public sealed class UserRepository(AppDbContext context) : IUserRepository
             ToListAsync(ct);
     }
 
-    public async Task Update(
-        User user,
-        CancellationToken ct = default)
+    public void Update(
+        User user)
     {
         context.Users.Update(user);
     }

@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Room;
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Exceptions;
 
 namespace Application.Services;
 
@@ -50,6 +51,8 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         var room = await repository.GetByIdAsync(id, ct);
         
         if (room is null) return false;
+        if (!room.IsActive)
+            throw new DomainException("Нельзя обновить неактивную комнату", nameof(room.Name));
 
         room.UpdateDetails(
             request.Name,

@@ -59,7 +59,7 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
 
         user.Block();
 
-        await repository.Update(user);
+        repository.Update(user);
         await repository.SaveChangesAsync(ct);
 
         return true;
@@ -75,7 +75,7 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
 
         user.Unblock();
 
-        await repository.Update(user);
+        repository.Update(user);
         await repository.SaveChangesAsync(ct);
 
         return true;
