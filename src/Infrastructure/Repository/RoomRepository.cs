@@ -21,6 +21,7 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
         CancellationToken ct = default)
     {
         return await context.Rooms
+            .AsNoTracking()
             .Where(r => r.IsActive)
             .FirstOrDefaultAsync(r => r.Id == id, ct);
     }
@@ -32,7 +33,8 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
             .AddAsync(room, ct);
     }
 
-    public void Update(Room room)
+    public void Update(
+        Room room)
     {
         if (room.IsActive)
         {

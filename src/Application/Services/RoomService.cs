@@ -24,7 +24,6 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         return MapToResponse(room);
     }
 
-
     // получить все комнаты
     public async Task<IReadOnlyList<RoomResponse>> ListAsync(
         CancellationToken ct = default)
@@ -32,8 +31,6 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         var rooms = await repository.GetAllAsync(ct);
         return rooms.Select(MapToResponse).ToArray();
     }
-
-
 
     // получить по айди
     public async Task<RoomResponse?> GetByIdAsync(
@@ -43,8 +40,6 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         var room = await repository.GetByIdAsync(id, ct);
         return room == null ? null : MapToResponse(room);
     }
-
-
 
     // обновить комнату
     public async Task<bool> UpdateAsync(
@@ -69,8 +64,6 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         return true;
     }
 
-
-
     // удалить комнату
     public async Task<bool> DeleteAsync(
         Guid id,
@@ -85,8 +78,6 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         await repository.SaveChangesAsync(ct);
         return true;
     }
-
-
 
     private static RoomResponse MapToResponse(Room room) =>
         new(

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.DTOs.Booking;
 
-internal class UpdateBookingRequest
+public class UpdateBookingRequest
 {
     [Required]
     public Guid RoomId { get; init; }

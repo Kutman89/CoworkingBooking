@@ -11,7 +11,7 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
         CreateUserRequest request,
         CancellationToken ct = default)
     {
-        var passwordHash = passwordHasher.Hash(request.Password);
+        var passwordHash = passwordHasher.Hash(request.PasswordHash);
 
         var user = new User(
             request.FirstName,
