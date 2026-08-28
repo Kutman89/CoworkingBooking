@@ -1,6 +1,7 @@
 ﻿using Application.DTOs.Booking;
 using Application.Interfaces;
 using Domain.Entities;
+using Bookings.Exceptions;
 
 namespace Application.Services;
 
@@ -30,6 +31,18 @@ public sealed class BookingService(IBookingRepository repository) : IBookingServ
             request.UserId,
             request.StartTime,
             request.EndTime);
+
+        var hasOverlap = await repository.HasOverlapAsync(
+            request.RoomId,
+            request.StartTime,
+            request.EndTime,
+            ct: ct);
+
+        if (hasOverlap)
+        {
+            throw new BookingConflictException(
+                $"Комната {request.RoomId} не может быть забронирована на {request.StartTime:0}-{request.EndTime:0}");
+        }
 
         await repository.AddAsync(booking, ct);
         await repository.SaveChangesAsync(ct);

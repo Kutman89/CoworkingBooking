@@ -8,7 +8,7 @@ namespace Web.Controllers;
 [Route("api/rooms")]
 public class RoomsController(IRoomService roomService) : ControllerBase
 {
-    // POST: api/Room 
+    // создание
     [HttpPost]
     [ProducesResponseType<RoomResponse>(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

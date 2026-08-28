@@ -2,11 +2,31 @@
 using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Domain.Enums;
 
 namespace Infrastructure.Repository;
 
 public class BookingRepository(AppDbContext context) : IBookingRepository
 {
+    public async Task<bool> HasOverlapAsync(
+        Guid roomId,
+        DateTime startUtc,
+        DateTime endUtc,
+        Guid? excludeBookingId = null,
+        CancellationToken ct = default)
+    {
+        var query = context.Bookings
+            .Where(b => b.RoomId == roomId)
+            .Where(b => b.Status != BookingStatus.Cancelled)
+            .Where(b => b.StartTime < endUtc && startUtc > b.EndTime);
+
+        if (excludeBookingId.HasValue) 
+        {
+            query = query.Where(b => b.Id != excludeBookingId.Value);
+        }
+
+        return await query.AnyAsync();
+    }
     public async Task<IReadOnlyList<Booking>> GetAllAsync(
         CancellationToken ct = default) 
     {
