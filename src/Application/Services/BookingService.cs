@@ -1,7 +1,7 @@
 ﻿using Application.DTOs.Booking;
 using Application.Interfaces;
 using Domain.Entities;
-using Bookings.Exceptions;
+using Domain.Exceptions;
 
 namespace Application.Services;
 

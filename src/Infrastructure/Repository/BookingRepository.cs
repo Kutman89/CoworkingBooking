@@ -18,7 +18,7 @@ public class BookingRepository(AppDbContext context) : IBookingRepository
         var query = context.Bookings
             .Where(b => b.RoomId == roomId)
             .Where(b => b.Status != BookingStatus.Cancelled)
-            .Where(b => b.StartTime < endUtc && startUtc > b.EndTime);
+            .Where(b => b.StartTime < endUtc && b.EndTime > startUtc);
 
         if (excludeBookingId.HasValue) 
         {

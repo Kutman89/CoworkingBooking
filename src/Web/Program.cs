@@ -4,9 +4,12 @@ using Infrastructure.Data;
 using Infrastructure.Repository;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
+using Web.Middlewere;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddExceptionHandler<DomainExceptionHandler>();
 
 builder.Services.AddControllers();
 builder.Services.AddProblemDetails();
