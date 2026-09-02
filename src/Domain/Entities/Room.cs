@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
+using System.Xml.Linq;
 
 namespace Domain.Entities;
 
@@ -16,29 +17,26 @@ public class Room
 
     private Room() { }
 
-    // Конструктор создания новой комнаты
-    public Room(string name, string description, int capacity, int floor, RoomType type)
+    public static Room Create(string name, string description, int capacity, int floor, RoomType type)
     {
-        Id = Guid.NewGuid();
-        UpdateDetails(name, description, capacity, floor, type);
-        IsActive = true;
+        InspectionOfParts(name, description, capacity, floor, type);
+
+        return new Room
+        {
+            Id = Guid.NewGuid(),
+            Name = name,
+            Description = description,
+            Capacity = capacity,
+            Floor = floor,
+            Type = type,
+            IsActive = true
+        };
     }
 
-    // обновления данных комнаты
     public void UpdateDetails(string name, string description, int capacity, int floor, RoomType type)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new DomainException("Имя комнаты не может быть пустым", nameof(name));
-        
-        if (string.IsNullOrWhiteSpace(description))
-            throw new DomainException("Описание комнаты не может быть пустым", nameof(description));
-        
-        if (capacity <= 0)
-            throw new DomainException("Вместимость должна быть больше 0", nameof(capacity));
-        
-        if(!Enum.IsDefined(type))
-            throw new DomainException("Недопустимый тип комнаты", nameof(type));
-        
+        InspectionOfParts(name, description, capacity, floor, type);
+
         Name = name;
         Description = description;
         Capacity = capacity;
@@ -63,5 +61,24 @@ public class Room
         }
 
         IsActive = true;
+    }
+
+    // Проверки
+    private static void InspectionOfParts(string name, string description, int capacity, int floor, RoomType type)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            throw new DomainException("Имя комнаты не может быть пустым", nameof(name));
+
+        if (string.IsNullOrWhiteSpace(description))
+            throw new DomainException("Описание комнаты не может быть пустым", nameof(description));
+
+        if (capacity <= 0)
+            throw new DomainException("Вместимость должна быть больше 0", nameof(capacity));
+
+        if (floor < 0 || floor > 200)
+            throw new DomainException("Недопустимый номер этажа", nameof(floor));
+
+        if (!Enum.IsDefined(type))
+            throw new DomainException("Недопустимый тип комнаты", nameof(type));
     }
 }

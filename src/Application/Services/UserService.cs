@@ -13,7 +13,7 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
     {
         var passwordHash = passwordHasher.Hash(request.Password);
 
-        var user = new User(
+        var user = User.Create(
             request.FirstName,
             request.LastName,
             request.Email,

@@ -12,7 +12,7 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         CreateRoomRequest request,
         CancellationToken ct = default)
     {
-        var room = new Room(
+        var room = Room.Create(
             request.Name,
             request.Description,
             request.Capacity,

@@ -14,24 +14,12 @@ public class Booking
 
     public BookingStatus Status { get; private set; }
 
+
     private Booking() { }
 
     public static Booking Create(Guid roomId, Guid userId, DateTime startTime, DateTime endTime)
     {
-        if(roomId == Guid.Empty)
-        {
-            throw new DomainException("Недопустимый идентификатор комнаты", nameof(roomId));
-        }
-        if (userId == Guid.Empty) 
-        {
-            throw new DomainException("Недопустимый идентификатор пользователя", nameof(userId));
-        }
-
-        if(startTime.Kind != DateTimeKind.Utc || endTime.Kind != DateTimeKind.Utc)
-            throw new DomainException("Время бронирования должно указываться в формате UTC", nameof(startTime));
-
-        ValidateTimes(startTime, endTime);
-
+        InspectionOfParts(roomId, userId, startTime, endTime);
 
         return new Booking
         {
@@ -44,6 +32,7 @@ public class Booking
         };
     }
 
+    // Изменение статуса
     public void Confirm()
     {
         if (Status != BookingStatus.Pending)
@@ -68,6 +57,7 @@ public class Booking
         Status = BookingStatus.Completed;
     }
 
+    // Изменение деталей бронирования
     public void ChangeRoom(Guid newRoomId)
     {
         EnsureModifiable();
@@ -88,6 +78,7 @@ public class Booking
         EndTime = newEndTime;
     }
 
+    // Проверки
     private void EnsureModifiable()
     {
         if (Status is BookingStatus.Completed or BookingStatus.Cancelled)
@@ -100,5 +91,25 @@ public class Booking
         {
             throw new DomainException("Начало должно быть до окончания", nameof (start));
         }
+    }
+
+    private static void InspectionOfParts(
+        Guid roomId, Guid userId,
+        DateTime startTime, DateTime endTime
+        )
+    {
+        if (roomId == Guid.Empty)
+        {
+            throw new DomainException("Недопустимый идентификатор комнаты", nameof(roomId));
+        }
+        if (userId == Guid.Empty)
+        {
+            throw new DomainException("Недопустимый идентификатор пользователя", nameof(userId));
+        }
+
+        if (startTime.Kind != DateTimeKind.Utc || endTime.Kind != DateTimeKind.Utc)
+            throw new DomainException("Время бронирования должно указываться в формате UTC", nameof(startTime));
+
+        ValidateTimes(startTime, endTime);
     }
 }

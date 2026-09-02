@@ -12,12 +12,18 @@ public class User
 
     private User() { }
 
-    public User(string firstName, string lastName, string email, string password)
+    public static User Create(string firstName, string lastName, string email, string password)
     {
-        Id = Guid.NewGuid();
-        UpdateProfile(firstName, lastName, email);
-        SetPasswordHash(password);
-        IsBlocked = false;
+        var user = new User
+        {
+            Id = Guid.NewGuid(),
+            IsBlocked = false
+        };
+
+        user.UpdateProfile(firstName, lastName, email);
+        user.SetPasswordHash(password);
+
+        return user;
     }
 
     public void SetPasswordHash(string passwordHash)
