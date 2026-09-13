@@ -1,10 +1,12 @@
-﻿using Domain.Entities;
+﻿using Application.Common;
+using Application.DTOs.Room;
+using Domain.Entities;
 
 namespace Application.Interfaces;
 
 public interface IRoomRepository
 {
-    Task<IReadOnlyList<Room>> GetAllAsync(CancellationToken ct = default);
+    Task<PagedResult<Room>> GetPagedAsync(RoomQueryParameters query, CancellationToken ct = default);
     Task<Room?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task AddAsync(Room room, CancellationToken ct = default);
     void Update(Room room);

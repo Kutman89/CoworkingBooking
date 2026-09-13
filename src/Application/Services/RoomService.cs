@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Room;
+﻿using Application.Common;
+using Application.DTOs.Room;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -25,12 +26,16 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         return MapToResponse(room);
     }
 
-    // получить все комнаты
-    public async Task<IReadOnlyList<RoomResponse>> ListAsync(
+    // получить комнаты
+    public async Task<PagedResult<RoomResponse>> ListAsync(
+        RoomQueryParameters query,
         CancellationToken ct = default)
     {
-        var rooms = await repository.GetAllAsync(ct);
-        return rooms.Select(MapToResponse).ToArray();
+        var result = await repository.GetPagedAsync(query, ct);
+        return new PagedResult<RoomResponse>(
+            result.Items.Select(MapToResponse).ToList(),
+            result.TotalCount, result.Page, result.PageSize
+        );
     }
 
     // получить по айди

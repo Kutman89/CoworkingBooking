@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Room;
+﻿using Application.Common;
+using Application.DTOs.Room;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,13 +24,14 @@ public class RoomsController(IRoomService roomService) : ControllerBase
     }
 
 
-    // Список всех комнат
+    // Список комнат
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<RoomResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<RoomResponse>>> GetAll(
+    [ProducesResponseType<PagedResult<RoomResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResult<RoomResponse>>> GetAll(
+        [FromQuery] RoomQueryParameters query,
         CancellationToken ct)
     {
-        var rooms = await roomService.ListAsync(ct);
+        var rooms = await roomService.ListAsync(query, ct);
         return Ok(rooms);
     }
 

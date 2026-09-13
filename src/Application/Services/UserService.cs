@@ -26,8 +26,6 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
         return MapToResponse(user);
     }
 
-
-
     // получить пользователя по айди
     public async Task<UserResponse?> GetByIdAsync(
         Guid id,
@@ -37,8 +35,6 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
         return user == null ? null : MapToResponse(user);
     }
 
-
-
     // получить всех пользователей
     public async Task<IReadOnlyList<UserResponse>> ListAsync(
         CancellationToken ct = default)
@@ -46,8 +42,6 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
         var users = await repository.GetAllAsync(ct);
         return users.Select(MapToResponse).ToList();
     }
-
-
 
     // заблокировать пользователя
     public async Task<bool> BlockAsync(
@@ -65,7 +59,6 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
         return true;
     }
 
-
     // разблокировать пользователя
     public async Task<bool> UnblockAsync(
         Guid id, CancellationToken ct = default)
@@ -80,7 +73,6 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
 
         return true;
     }
-
 
     private static UserResponse MapToResponse(User user) => 
         new UserResponse(
