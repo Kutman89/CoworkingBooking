@@ -28,9 +28,10 @@ public sealed class UserRepository(AppDbContext context) : IUserRepository
         UserQueryParameters query,
         CancellationToken ct = default)
     {
-        var users = context.Users
-            .AsNoTracking().
-            Where(u => u.IsBlocked);
+        var users = context.Users.AsNoTracking();
+
+        if(query.IsBlocked is { } isBlocked)
+            users = users.Where(u => u.IsBlocked == isBlocked);
 
         users = (query.SortBy?.ToLowerInvariant(), query.SortDescending) switch
         {

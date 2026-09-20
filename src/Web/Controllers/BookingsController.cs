@@ -1,4 +1,5 @@
-﻿using Application.DTOs.Booking;
+﻿using Application.Common;
+using Application.DTOs.Booking;
 using Application.DTOs.Room;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -25,9 +26,9 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
 
     // список всех броней
     [HttpGet]
-    [ProducesResponseType<IReadOnlyList<BookingResponse>>(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<BookingResponse>>> GetAll(
-        BookingQueryParameters query,
+    [ProducesResponseType<PagedResult<BookingResponse>>(StatusCodes.Status200OK)]
+    public async Task<ActionResult<PagedResult<BookingResponse>>> GetAll(
+        [FromQuery] BookingQueryParameters query,
         CancellationToken ct)
     {
         var bookings = await bookingService.ListAsync(query, ct);

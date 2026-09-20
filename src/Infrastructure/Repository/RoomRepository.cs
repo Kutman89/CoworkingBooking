@@ -9,16 +9,6 @@ namespace Infrastructure.Repository;
 
 public class RoomRepository(AppDbContext context) : IRoomRepository
 {
-    public async Task<IReadOnlyList<Room>> GetAllAsync(
-        CancellationToken ct = default)
-    {
-        return await context.Rooms
-            .AsNoTracking()
-            .Where(r => r.IsActive)
-            .OrderBy(r => r.Name)
-            .ToListAsync(ct);
-    }
-
     public async Task<PagedResult<Room>> GetPagedAsync(
         RoomQueryParameters query,
         CancellationToken ct = default)

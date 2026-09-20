@@ -40,7 +40,7 @@ public class UsersController(IUserService userService) : ControllerBase
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<ActionResult<PagedResult<UserResponse>>> GetAll(
-        UserQueryParameters query,
+        [FromQuery] UserQueryParameters query,
         CancellationToken ct)
     {
         var users = await userService.ListAsync(query, ct);
