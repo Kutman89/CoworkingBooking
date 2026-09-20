@@ -2,10 +2,12 @@
 
 namespace Application.DTOs.Booking;
 
-public record BookingResponse(
+public record BookingResponse
+(
     Guid Id,
     Guid RoomId,
     Guid UserId,
     DateTime StartTime,
     DateTime EndTime,
-    BookingStatus Status);
+    BookingStatus Status
+);

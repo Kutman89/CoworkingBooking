@@ -1,4 +1,6 @@
-﻿using Application.DTOs.Booking;
+﻿using Application.Common;
+using Application.DTOs.Booking;
+using Application.DTOs.Room;
 using Application.Interfaces;
 using Domain.Entities;
 using Domain.Exceptions;
@@ -7,11 +9,15 @@ namespace Application.Services;
 
 public sealed class BookingService(IBookingRepository repository) : IBookingService
 {
-    public async Task<IReadOnlyList<BookingResponse>> ListAsync(
+    public async Task<PagedResult<BookingResponse>> ListAsync(
+        BookingQueryParameters query,
         CancellationToken ct = default)
     {
-        var bookings = await repository.GetAllAsync(ct);
-        return bookings.Select(MapToResponse).ToList();
+        var result = await repository.GetPagedAsync(query, ct);
+        return new PagedResult<BookingResponse>(
+            result.Items.Select(MapToResponse).ToList(),
+            result.TotalCount, result.Page, result.PageSize
+        );
     }
 
     public async Task<BookingResponse?> GetByIdAsync(

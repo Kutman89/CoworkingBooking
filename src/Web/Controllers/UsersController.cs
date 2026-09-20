@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Application.Interfaces;
 using Application.DTOs.User;
+using Application.Common;
 
 namespace Web.Controllers;
 
@@ -38,10 +39,11 @@ public class UsersController(IUserService userService) : ControllerBase
     // получить всех пользователей
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<ActionResult<IReadOnlyList<UserResponse>>> GetAll(
+    public async Task<ActionResult<PagedResult<UserResponse>>> GetAll(
+        UserQueryParameters query,
         CancellationToken ct)
     {
-        var users = await userService.ListAsync(ct);
+        var users = await userService.ListAsync(query, ct);
         return Ok(users);
     }
 

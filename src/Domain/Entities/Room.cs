@@ -1,6 +1,5 @@
 ﻿using Domain.Enums;
 using Domain.Exceptions;
-using System.Xml.Linq;
 
 namespace Domain.Entities;
 

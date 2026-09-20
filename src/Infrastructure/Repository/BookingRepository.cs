@@ -1,8 +1,10 @@
-﻿using Application.Interfaces;
+﻿using Application.Common;
+using Application.DTOs.Booking;
+using Application.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Domain.Enums;
 
 namespace Infrastructure.Repository;
 
@@ -27,13 +29,37 @@ public class BookingRepository(AppDbContext context) : IBookingRepository
 
         return await query.AnyAsync();
     }
-    public async Task<IReadOnlyList<Booking>> GetAllAsync(
+    public async Task<PagedResult<Booking>> GetPagedAsync(
+        BookingQueryParameters query,
         CancellationToken ct = default) 
     {
-        return await context.Bookings
-            .AsNoTracking()
-            .OrderBy(b => b.Id)
+        var bookings = context.Bookings.AsNoTracking();
+
+        if(query.RoomId is { } roomId)
+            bookings = bookings.Where(b => b.RoomId == roomId);
+
+        if(query.UserId is { } userId)
+            bookings = bookings.Where(b => b.UserId == userId);
+
+        if(query.Status is { } status)
+            bookings = bookings.Where(b => b.Status == status);
+
+        bookings = (query.SortBy?.ToLowerInvariant(), query.SortDescending) switch
+        {
+            ("starttime", false) => bookings.OrderBy(b => b.StartTime),
+            ("starttime", true) => bookings.OrderByDescending(b => b.StartTime),
+            ("endtime", false) => bookings.OrderBy(b => b.EndTime),
+            ("endtime", true) => bookings.OrderByDescending(b => b.EndTime),
+            _ => bookings.OrderBy(b => b.StartTime)
+        };
+        var totalCount = await bookings.CountAsync(ct);
+
+        var items = await bookings
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
             .ToListAsync(ct);
+
+        return new PagedResult<Booking>(items, totalCount, query.Page, query.PageSize);
     }
 
     public async Task<Booking?> GetByIdAsync(

@@ -1,6 +1,8 @@
-﻿using Domain.Entities;
-using Application.Interfaces;
+﻿using Application.Common;
+using Application.DTOs.Booking;
 using Application.DTOs.User;
+using Application.Interfaces;
+using Domain.Entities;
 
 namespace Application.Services;
 
@@ -36,11 +38,15 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
     }
 
     // получить всех пользователей
-    public async Task<IReadOnlyList<UserResponse>> ListAsync(
+    public async Task<PagedResult<UserResponse>> ListAsync(
+        UserQueryParameters query,
         CancellationToken ct = default)
     {
-        var users = await repository.GetAllAsync(ct);
-        return users.Select(MapToResponse).ToList();
+        var result = await repository.GetPagedAsync(query, ct);
+        return new PagedResult<UserResponse>(
+            result.Items.Select(MapToResponse).ToList(),
+            result.TotalCount, result.Page, result.PageSize
+        );
     }
 
     // заблокировать пользователя
@@ -75,10 +81,11 @@ public sealed class UserService(IUserRepository repository, IPasswordHasher pass
     }
 
     private static UserResponse MapToResponse(User user) => 
-        new UserResponse(
-        user.Id,
-        user.FirstName,
-        user.LastName,
-        user.Email
-    );
+        new (
+            user.Id,
+            user.FirstName,
+            user.LastName,
+            user.Email,
+            user.IsBlocked
+        );
 }

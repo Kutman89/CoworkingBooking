@@ -27,9 +27,10 @@ public class BookingsController(IBookingService bookingService) : ControllerBase
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<BookingResponse>>(StatusCodes.Status200OK)]
     public async Task<ActionResult<IReadOnlyList<BookingResponse>>> GetAll(
+        BookingQueryParameters query,
         CancellationToken ct)
     {
-        var bookings = await bookingService.ListAsync(ct);
+        var bookings = await bookingService.ListAsync(query, ct);
         return Ok(bookings);
     }
 
