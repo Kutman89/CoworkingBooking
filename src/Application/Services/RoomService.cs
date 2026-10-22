@@ -38,6 +38,15 @@ public sealed class RoomService(IRoomRepository repository) : IRoomService
         );
     }
 
+    // получить по айди с проверкой на активность
+    public async Task<RoomResponse?> GetActiveByIdAsync(
+        Guid id,
+        CancellationToken ct = default)
+    {
+        var room = await repository.GetActiveByIdAsync(id, ct);
+        return room == null ? null : MapToResponse(room);
+    }
+
     // получить по айди
     public async Task<RoomResponse?> GetByIdAsync(
         Guid id,

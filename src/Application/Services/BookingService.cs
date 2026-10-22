@@ -65,6 +65,19 @@ public sealed class BookingService(IBookingRepository repository) : IBookingServ
 
         if (booking is null) return false;
 
+        var hasOverlap = await repository.HasOverlapAsync(
+            booking.RoomId,
+            request.StartTime,
+            request.EndTime,
+            excludeBookingId: id,
+            ct);
+
+        if (hasOverlap)
+        {
+            throw new BookingConflictException(
+                $"Комната {booking.RoomId} не может быть забронирована на {request.StartTime:0}-{request.EndTime:0}");
+        }
+
         booking.UpdateBookingTimes(request.StartTime, request.EndTime);
 
         repository.Update(booking);

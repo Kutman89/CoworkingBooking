@@ -1,4 +1,5 @@
-﻿using Domain.Exceptions;
+﻿using Domain.Enums;
+using Domain.Exceptions;
 
 namespace Domain.Entities;
 public class User
@@ -9,6 +10,7 @@ public class User
     public string Email { get; private set; } = null!;
     public string PasswordHash { get; private set; } = null!;
     public bool IsBlocked { get; private set; }
+    public UserRole Role { get; private set; }
 
     private User() { }
 
@@ -17,7 +19,8 @@ public class User
         var user = new User
         {
             Id = Guid.NewGuid(),
-            IsBlocked = false
+            IsBlocked = false,
+            Role = UserRole.User
         };
 
         user.UpdateProfile(firstName, lastName, email);
@@ -64,5 +67,22 @@ public class User
             throw new DomainException("Пользователь уже разблокирован", nameof(IsBlocked));
         }
         IsBlocked = false;
+    }
+
+    public void PromoteToAdmin()
+    {
+        if (Role == UserRole.Admin)
+        {
+            throw new DomainException("Пользователь уже является администратором", nameof(Role));
+        }
+        Role = UserRole.Admin;
+    }
+    public void PromoteToUser()
+    {
+        if (Role == UserRole.User)
+        {
+            throw new DomainException("Пользователь уже является обычным пользователем", nameof(Role));
+        }
+        Role = UserRole.User;
     }
 }

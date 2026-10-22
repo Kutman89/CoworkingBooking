@@ -7,6 +7,7 @@ namespace Application.Interfaces;
 public interface IRoomRepository
 {
     Task<PagedResult<Room>> GetPagedAsync(RoomQueryParameters query, CancellationToken ct = default);
+    Task<Room?> GetActiveByIdAsync(Guid id, CancellationToken ct = default);
     Task<Room?> GetByIdAsync(Guid id, CancellationToken ct = default);
     Task AddAsync(Room room, CancellationToken ct = default);
     void Update(Room room);

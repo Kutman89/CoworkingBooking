@@ -44,13 +44,21 @@ public class RoomRepository(AppDbContext context) : IRoomRepository
         return new PagedResult<Room>(items, totalCount, query.Page, query.PageSize);
     }
 
-    public async Task<Room?> GetByIdAsync(
+    public async Task<Room?> GetActiveByIdAsync(
         Guid id,
         CancellationToken ct = default)
     {
         return await context.Rooms
             .AsNoTracking()
             .Where(r => r.IsActive)
+            .FirstOrDefaultAsync(r => r.Id == id, ct);
+    }
+    public async Task<Room?> GetByIdAsync(
+        Guid id,
+        CancellationToken ct = default)
+    {
+        return await context.Rooms
+            .AsNoTracking()
             .FirstOrDefaultAsync(r => r.Id == id, ct);
     }
 

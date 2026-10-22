@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Domain.Enums;
 using Domain.Entities;
 
 namespace Infrastructure.Configuration;
@@ -24,6 +25,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(u => u.Email)
             .IsUnique();
+
+        builder.Property(u => u.Role)
+            .HasConversion<string>()
+            .HasMaxLength(5)
+            .IsRequired();
 
         builder.Property(u => u.PasswordHash)
             .IsRequired()

@@ -1,6 +1,5 @@
 ﻿using Application.Common;
 using Application.DTOs.Booking;
-using Application.DTOs.Room;
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
