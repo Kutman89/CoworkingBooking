@@ -5,4 +5,11 @@
     <Project Path="src/Infrastructure/Infrastructure.csproj" Id="e87ef06a-e47a-4e7b-8d91-4b951b415ed1" />
     <Project Path="src/Web/Web.csproj" Id="a9341761-0544-49e9-a382-e03ffcc32ca5" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Infrastructure.Tests/Infrastructure.Tests.csproj" Id="351bf0e4-7fca-4793-8588-383b5c55de92" />
+  </Folder>
+  <Folder Name="/Элементы решения/">
+    <File Path=".env" />
+    <File Path="README.md" />
+  </Folder>
 </Solution>

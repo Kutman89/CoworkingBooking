@@ -5,6 +5,8 @@ using Infrastructure.Repository;
 using Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
 using Web.Middlewere;
+using DotNetEnv;
+Env.Load();
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,9 +33,7 @@ builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
 
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException(
-        "Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
